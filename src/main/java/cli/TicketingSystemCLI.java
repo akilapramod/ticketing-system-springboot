@@ -4,8 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import com.google.gson.Gson;
 
@@ -54,11 +52,6 @@ public class TicketingSystemCLI {
         }
     }
 
-    //Data time logger
-    static void logMessage(String message) {
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-        System.out.println(timestamp + " - " + message);
-    }
 
 
     //this method is used to display the menu for the Configuration
@@ -85,7 +78,7 @@ public class TicketingSystemCLI {
                         configureSystem();
                         break;
                     case 2:
-                        loadSystemConfig();
+                        //loadConfiguration();
                         break;
                     case 0:
                         exit();
@@ -185,23 +178,7 @@ public class TicketingSystemCLI {
         initiateThreads(configuration, new TicketPool(configuration.getTotalTickets(), configuration.getMaxTicketCapacity()));
     }
 
-    public static void saveSystemConfig(Configuration config) {
-        String filePath;
-        Gson gson = new Gson();
-        String json = gson.toJson(config);
-        try (FileWriter writer = new FileWriter("filePath")) {
-            writer.write(json);
-            logger.info("Configuration saved to {}", "filePath");
-        } catch (IOException e) {
-            logger.error("Error saving configuration", e);
-        }
-    }
 
-
-public static void loadSystemConfig() {
-
-
-}
 
 public static void exit() {
 }

@@ -1,5 +1,6 @@
 package dev.akila.ticketing_system.threads;
 
+import cli.TicketingSystemCLI;
 import dev.akila.ticketing_system.TicketingSystemApplication;
 import dev.akila.ticketing_system.model.Configuration;
 import dev.akila.ticketing_system.model.Ticket;

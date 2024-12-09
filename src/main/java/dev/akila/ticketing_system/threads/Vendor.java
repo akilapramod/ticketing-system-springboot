@@ -34,7 +34,9 @@ public class Vendor implements Runnable {
                 //System.out.println(ticketPool.getTicketsList());
                 Thread.sleep(configuration.getTicketReleaseRate());
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                logger.error("Thread interrupted", e);
+                Thread.currentThread().interrupt(); // Preserve interrupt status
+                running = false; // Gracefully stop the thread
             }
         }
     }

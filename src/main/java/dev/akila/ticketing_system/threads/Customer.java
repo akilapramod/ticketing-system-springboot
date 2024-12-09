@@ -13,7 +13,7 @@ public class Customer implements Runnable {
 //    String customerName;
     private Configuration configuration;
     private TicketPool ticketPool;
-    private volatile boolean running=true;
+    private volatile boolean running = true;
 
 
     public Customer(Configuration configuration, TicketPool ticketPool) {
@@ -27,17 +27,18 @@ public class Customer implements Runnable {
         while (running) {
             try {
                 Ticket ticket = ticketPool.removeTickets();
-                logger.info("Customer retrieved ticket: ID {}. Total tickets: {}",ticket.getTicketId(), ticketPool.getAvailableTicketCount());
-                //System.out.println(ticketPool.getTicketsList());
+                logger.info("Customer retrieved ticket: ID {}. Total tickets: {}", ticket.getTicketId(), ticketPool.getAvailableTicketCount());
                 Thread.sleep(configuration.getCustomerRetrievalRate());
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                logger.error("Thread interrupted", e);
+                Thread.currentThread().interrupt(); // Preserve interrupt status
+                running = false; // Gracefully stop the thread
             }
         }
     }
 
-    public void stop(){
-        running= false;
+    public void stop() {
+        running = false;
 
     }
 

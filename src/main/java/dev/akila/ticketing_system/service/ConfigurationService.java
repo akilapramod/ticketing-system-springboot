@@ -9,6 +9,7 @@ public class ConfigurationService {
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+
     }
 
     public Configuration getConfiguration(){

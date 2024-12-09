@@ -20,8 +20,8 @@ public class CustomerVendorService {
     private Thread[] vendorThreads;
     private Thread[] customerThreads;
 
-    int numberOfVendors = 2;
-    int numberofCustomers = 5;
+    int numberOfVendors = 3;
+    int numberofCustomers = 1;
 
     Vendor[] vendors = new Vendor[numberOfVendors];
     Customer[] customers = new Customer[numberofCustomers];

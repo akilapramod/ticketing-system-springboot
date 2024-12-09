@@ -21,7 +21,8 @@ public class ConfigurationController {
     @Autowired
     private TicketPoolService ticketPoolService;
 
-    @Autowired CustomerVendorService customerVendorService;
+    @Autowired
+    CustomerVendorService customerVendorService;
 
     @PostMapping("/set")
     public void setConfigurationService(@RequestBody Configuration configuration) {

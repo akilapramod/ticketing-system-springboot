@@ -156,17 +156,14 @@ public class TicketingSystemCLI {
         configurationService.setConfiguration(totalTickets, maxTicketCapacity, ticketReleaseRate, ticketRetrievalRate);
         ticketPoolService.setTicketPool(totalTickets, maxTicketCapacity);
         startSystem();
-
-
-        //CLIconfigurationService.saveSystemConfig(configuration);
     }
 
     public void loadConfiguration() {
 
-        configurationService.loadConfigurationFromFile();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
+                System.out.println(configurationService.getConfiguration());
                 System.out.println("1. Proceed with the loaded configuration");
                 System.out.println("2. Add a new configuration");
                 System.out.println("0. Exit");
@@ -174,7 +171,7 @@ public class TicketingSystemCLI {
                 int option = scanner.nextInt();
                 switch (option) {
                     case 1:
-                        System.out.println("loading using the configuration service");
+                        configurationService.loadConfigurationFromFile();
                         break;
                     case 2:
                         configureSystem();

@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+
 
 @Service
 public class ConfigurationService {
@@ -25,7 +23,7 @@ public class ConfigurationService {
     }
 
     public ConfigurationService(){
-        this.configuration = configuration;
+        configuration = loadConfigurationFromFile();
     }
 
     //setting the configuration
@@ -50,10 +48,7 @@ public class ConfigurationService {
 
     public void saveSystemConfig(Configuration config) {
 
-        String filePath = "src/main/resources/config.json";
-
         Gson gson = new Gson();
-
         String json = gson.toJson(config);
 
         try (FileWriter writer = new FileWriter(filePath)) {
@@ -66,17 +61,17 @@ public class ConfigurationService {
 
     public Configuration loadConfigurationFromFile() {
 
-        //Need to test and implement further file error handling
-        if (!new File(filePath).exists()) {
+    Gson gson = new Gson();
+    try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.json")) {
+        if (inputStream == null) {
+            logger.error("Configuration file not found in classpath");
             return null;
         }
-        Gson gson = new Gson();
-        Configuration config = null;
-        try (FileReader reader = new FileReader(filePath)) {
-            config = gson.fromJson(reader, Configuration.class);
-        } catch (IOException e) {
-            System.err.println("Error loading configuration from file: " + e.getMessage());
-        }
-        return config;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        configuration = gson.fromJson(reader, Configuration.class);
+        logger.info("Configuration loaded from file: {}", configuration);
+    } catch (IOException e) {
+        logger.error("Error loading configuration from file", e);
     }
+    return configuration;}
 }

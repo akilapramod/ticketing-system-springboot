@@ -9,12 +9,12 @@ public class TicketPoolService {
     private TicketPool ticketPool;
 
     public void setTicketPool(Configuration configuration) {
-        ticketPool = new TicketPool(configuration.getTotalTickets(),configuration.getMaxTicketCapacity());
+        ticketPool = new TicketPool(configuration.getTotalTickets(), configuration.getMaxTicketCapacity());
     }
 
-      public void setTicketPool(int totalTickets,int maxTicketCapacity) {
-        ticketPool = new TicketPool(totalTickets,maxTicketCapacity);
-          System.out.println("Ticket pool set:"+ticketPool.getAvailableTicketCount());
+    public void setTicketPool(int totalTickets, int maxTicketCapacity) {
+        ticketPool = new TicketPool(totalTickets, maxTicketCapacity);
+
     }
 
     public TicketPool getTicketPool() {

@@ -5,7 +5,7 @@ const App: React.FC = () => {
         maxTicketCapacity: '',
         totalTickets: '',
         ticketReleaseRate: '',
-        ticketRetrievalRate: '',
+        customerRetrievalRate: '',
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,8 +68,8 @@ const App: React.FC = () => {
                     Ticket Retrieval Rate:
                     <input
                         type="number"
-                        name="ticketRetrievalRate"
-                        value={config.ticketRetrievalRate}
+                        name="customerRetrievalRate"
+                        value={config.customerRetrievalRate}
                         onChange={handleChange}
                     />
                 </label>

@@ -4,24 +4,28 @@ package cli;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import dev.akila.ticketing_system.TicketingSystemApplication;
 import dev.akila.ticketing_system.model.Configuration;
 import dev.akila.ticketing_system.model.TicketPool;
 import dev.akila.ticketing_system.service.ConfigurationService;
+import dev.akila.ticketing_system.service.TicketPoolService;
 import dev.akila.ticketing_system.threads.Customer;
 import dev.akila.ticketing_system.threads.Vendor;
+import org.springframework.stereotype.Component;
 
-
-
+@Component
 public class TicketingSystemCLI {
     private static final Scanner scanner = new Scanner(System.in);
+    private static ConfigurationService configurationService = new ConfigurationService();
+    private static TicketPoolService ticketPoolService = new TicketPoolService();
 
-    public static void main(String[] args) {
 
-        //prompt user to configure the system
-        displayConfigurationMenu();
-    }
+    public static void initiateThreads() {
 
-    public static void initiateThreads(Configuration defaultConfiguration, TicketPool ticketPool) {
+       Configuration cliConfiguration = configurationService.getConfiguration();
+        System.out.println(cliConfiguration.toString());
+        System.out.println(ticketPoolService.getTicketPool().toString());
+        TicketPool ticketPool = ticketPoolService.getTicketPool();
 
 
         int numberOfVendors = 2;
@@ -35,14 +39,14 @@ public class TicketingSystemCLI {
 
         // Create and start vendor threads
         for (int i = 0; i < numberOfVendors; i++) {
-            vendors[i] = new Vendor(defaultConfiguration, ticketPool);
+            vendors[i] = new Vendor(cliConfiguration, ticketPool);
             vendorThreads[i] = new Thread(vendors[i]);
             vendorThreads[i].start();
         }
 
         // Create and start customer threads
         for (int i = 0; i < numberOfCustomers; i++) {
-            customers[i] = new Customer(defaultConfiguration, ticketPool);
+            customers[i] = new Customer(cliConfiguration, ticketPool);
             customerThreads[i] = new Thread(customers[i]);
             customerThreads[i].start();
         }
@@ -97,8 +101,6 @@ public class TicketingSystemCLI {
         int ticketRetrievalRate;
 
 
-
-
         while (true) {
             try {
                 System.out.print("Enter maximum ticket capacity: ");
@@ -136,7 +138,6 @@ public class TicketingSystemCLI {
                 scanner.nextLine();
             }
         }
-
         while (true) {
             try {
                 System.out.print("Enter ticket release rate: ");
@@ -152,7 +153,6 @@ public class TicketingSystemCLI {
                 scanner.nextLine();
             }
         }
-
         while (true) {
             try {
                 System.out.print("Enter ticket retrieval rate: ");
@@ -169,18 +169,20 @@ public class TicketingSystemCLI {
             }
         }
 
-        Configuration configuration = new Configuration(totalTickets, maxTicketCapacity, ticketReleaseRate, ticketRetrievalRate);
-        System.out.println(configuration);
-        initiateThreads(configuration, new TicketPool(configuration.getTotalTickets(), configuration.getMaxTicketCapacity()));
+
+
+        configurationService.setConfiguration(totalTickets, maxTicketCapacity, ticketReleaseRate, ticketRetrievalRate);
+        ticketPoolService.setTicketPool(totalTickets, maxTicketCapacity);
+        System.out.println(configurationService.getConfiguration());
+
+        //CLIconfigurationService.saveSystemConfig(configuration);
     }
 
     public static void loadConfiguration() {
         ConfigurationService configurationCLI = new ConfigurationService();
-        configurationCLI.loadConfigurationFromFile(configurationCLI.getFilePath());
-
-
-
-        while(true){
+        configurationCLI.loadConfigurationFromFile();
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
             try {
                 System.out.println("1. Proceed with the loaded configuration");
                 System.out.println("2. Add a new configuration");
@@ -209,8 +211,37 @@ public class TicketingSystemCLI {
         System.out.println(configurationCLI.getConfiguration());
     }
 
+    public static void startSystem() {
+        while (true) {
+            try {
+                System.out.println("1. Start the system");
+                System.out.println("0. Exit");
+                System.out.print("Enter your choice: ");
+                int option = scanner.nextInt();
+                switch (option) {
+                    case 1:
+                        initiateThreads();
+                        break;
+                    case 0:
+                        exit();
+                        break;
+                    default:
+                        System.out.print("Invalid option. Please enter a number between 0 and 1: ");
+                        continue;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Please enter a valid number: ");
+                scanner.nextLine();
+            }
+        }
+    }
 
     public static void exit() {
+    }
+
+    public static void main(String[] args) {
+
     }
 
 

@@ -17,9 +17,6 @@ public class CustomerVendorService {
     @Autowired
     private TicketPoolService ticketPoolService;
 
-    private Thread[] vendorThreads;
-    private Thread[] customerThreads;
-
     int numberOfVendors = 3;
     int numberCustomers = 1;
 
@@ -30,8 +27,8 @@ public class CustomerVendorService {
         Configuration configuration = configurationService.getConfiguration();
         TicketPool ticketPool = ticketPoolService.getTicketPool();
 
-        vendorThreads = new Thread[numberOfVendors];
-        customerThreads = new Thread[numberCustomers];
+        Thread[] vendorThreads = new Thread[numberOfVendors];
+        Thread[] customerThreads = new Thread[numberCustomers];
 
         for (int i = 0; i < numberOfVendors; i++) {
             vendors[i] = new Vendor(configuration, ticketPool);
@@ -65,6 +62,3 @@ public class CustomerVendorService {
         }
     }
 }
-
-
-

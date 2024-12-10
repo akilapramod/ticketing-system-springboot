@@ -1,22 +1,18 @@
 package cli;
 
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import com.google.gson.Gson;
-
 import dev.akila.ticketing_system.model.Configuration;
 import dev.akila.ticketing_system.model.TicketPool;
+import dev.akila.ticketing_system.service.ConfigurationService;
 import dev.akila.ticketing_system.threads.Customer;
 import dev.akila.ticketing_system.threads.Vendor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 
 public class TicketingSystemCLI {
-    private static final Logger logger = LoggerFactory.getLogger(TicketingSystemCLI.class);
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -52,8 +48,6 @@ public class TicketingSystemCLI {
         }
     }
 
-
-
     //this method is used to display the menu for the Configuration
     public static void displayConfigurationMenu() {
 
@@ -78,7 +72,7 @@ public class TicketingSystemCLI {
                         configureSystem();
                         break;
                     case 2:
-                        //loadConfiguration();
+                        loadConfiguration();
                         break;
                     case 0:
                         exit();
@@ -101,6 +95,8 @@ public class TicketingSystemCLI {
         int totalTickets;
         int ticketReleaseRate;
         int ticketRetrievalRate;
+
+
 
 
         while (true) {
@@ -178,10 +174,44 @@ public class TicketingSystemCLI {
         initiateThreads(configuration, new TicketPool(configuration.getTotalTickets(), configuration.getMaxTicketCapacity()));
     }
 
+    public static void loadConfiguration() {
+        ConfigurationService configurationCLI = new ConfigurationService();
+        configurationCLI.loadConfigurationFromFile(configurationCLI.getFilePath());
 
 
-public static void exit() {
-}
+
+        while(true){
+            try {
+                System.out.println("1. Proceed with the loaded configuration");
+                System.out.println("2. Add a new configuration");
+                System.out.println("0. Exit");
+                System.out.print("Enter your choice: ");
+                int option = scanner.nextInt();
+                switch (option) {
+                    case 1:
+                        break;
+                    case 2:
+                        configureSystem();
+                        break;
+                    case 0:
+                        exit();
+                        break;
+                    default:
+                        System.out.print("Invalid option. Please enter a number between 0 and 2: ");
+                        continue;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Please enter a valid number: ");
+                scanner.nextLine();
+            }
+        }
+        System.out.println(configurationCLI.getConfiguration());
+    }
+
+
+    public static void exit() {
+    }
 
 
 }

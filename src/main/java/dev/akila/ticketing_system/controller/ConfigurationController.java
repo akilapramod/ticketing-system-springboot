@@ -28,7 +28,7 @@ public class ConfigurationController {
     public void setConfigurationService(@RequestBody Configuration configuration) {
         configurationService.setConfiguration(configuration);
         ticketPoolService.setTicketPool(new TicketPool(configuration.getTotalTickets(), configuration.getMaxTicketCapacity()));
-        System.out.println(configuration);
+        System.out.println(configuration.toString());
         System.out.println(ticketPoolService.getTicketPool());
     }
 
@@ -40,14 +40,20 @@ public class ConfigurationController {
     @PostMapping("/start")
     public void startSystem(){
          customerVendorService.startThreads();
-
-
     }
 
     @PostMapping("stop")
     public void stopSystem(){
         customerVendorService.stopThreads();
         System.out.println("Threads stopped.");
+    }
+
+    @PostMapping("load")
+    public void loadSystem(){
+        Configuration config = configurationService.loadConfigurationFromFile(configurationService.getFilePath());
+        //after api get called for loading the configuration, the configuration should be displayed in the frond end
+        //and the user should be able to confirm the configuration or edit and set the configuration.
+        setConfigurationService(config);
 
     }
 
@@ -55,5 +61,4 @@ public class ConfigurationController {
     public void test(){
         System.out.println("HTTP Test");
     }
-
 }

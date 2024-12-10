@@ -1,6 +1,6 @@
 package dev.akila.ticketing_system.model;//TicketPool class using a thread-safe data structure
 
-import dev.akila.ticketing_system.threads.Vendor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

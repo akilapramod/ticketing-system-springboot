@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class Customer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Customer.class);
     //    String customerID;
-//    String customerName;
+    //    String customerName;
     private Configuration configuration;
     private TicketPool ticketPool;
     private volatile boolean running = true;

@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 public class Ticket {
     private int ticketId;
-    private static int nextTicketId =1;
+    private static int nextTicketId = 1;
     private String eventName;
     private BigDecimal ticketPrice;
 
@@ -41,10 +41,6 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket{" +
-                "ticketId=" + ticketId +
-                ", eventName='" + eventName + '\'' +
-                ", ticketPrice=" + ticketPrice +
-                '}';
+        return "Ticket{" + "ticketId=" + ticketId + ", eventName='" + eventName + '\'' + ", ticketPrice=" + ticketPrice + '}';
     }
 }

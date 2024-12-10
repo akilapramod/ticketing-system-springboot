@@ -16,17 +16,26 @@ import java.io.IOException;
 public class ConfigurationService {
     static Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
     private Configuration configuration;
+    private static String filePath = "src/main/resources/config.json";
+
+
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
         saveSystemConfig(configuration);
     }
 
+
+
     public Configuration getConfiguration() {
         return configuration;
     }
 
-    public static void saveSystemConfig(Configuration config) {
+    public String getFilePath(){
+        return filePath;
+    }
+
+    public void saveSystemConfig(Configuration config) {
 
         String filePath = "src/main/resources/config.json";
 
@@ -42,7 +51,7 @@ public class ConfigurationService {
         }
     }
 
-    private static Configuration loadConfigurationFromFile(String filename) {
+    public Configuration loadConfigurationFromFile(String filename) {
         if (!new File(filename).exists()) {
             return null;
         }

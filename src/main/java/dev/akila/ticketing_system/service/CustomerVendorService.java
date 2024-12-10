@@ -21,17 +21,17 @@ public class CustomerVendorService {
     private Thread[] customerThreads;
 
     int numberOfVendors = 3;
-    int numberofCustomers = 1;
+    int numberCustomers = 1;
 
     Vendor[] vendors = new Vendor[numberOfVendors];
-    Customer[] customers = new Customer[numberofCustomers];
+    Customer[] customers = new Customer[numberCustomers];
 
     public void startThreads() {
         Configuration configuration = configurationService.getConfiguration();
         TicketPool ticketPool = ticketPoolService.getTicketPool();
 
         vendorThreads = new Thread[numberOfVendors];
-        customerThreads = new Thread[numberofCustomers];
+        customerThreads = new Thread[numberCustomers];
 
         for (int i = 0; i < numberOfVendors; i++) {
             vendors[i] = new Vendor(configuration, ticketPool);
@@ -39,7 +39,7 @@ public class CustomerVendorService {
             vendorThreads[i].start();
         }
 
-        for (int i = 0; i < numberofCustomers; i++) {
+        for (int i = 0; i < numberCustomers; i++) {
             customers[i] = new Customer(configuration, ticketPool);
             customerThreads[i] = new Thread(customers[i]);
             customerThreads[i].start();

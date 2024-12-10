@@ -14,6 +14,7 @@ public class TicketPoolService {
 
       public void setTicketPool(int totalTickets,int maxTicketCapacity) {
         ticketPool = new TicketPool(totalTickets,maxTicketCapacity);
+          System.out.println("Ticket pool set:"+ticketPool.getAvailableTicketCount());
     }
 
     public TicketPool getTicketPool() {
@@ -23,5 +24,7 @@ public class TicketPoolService {
     public int getAvailableTickets() {
         return ticketPool.getAvailableTicketCount();
     }
+
+
 }
 

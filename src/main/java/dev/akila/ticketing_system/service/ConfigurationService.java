@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
-
 @Service
 public class ConfigurationService {
     static Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
@@ -24,22 +23,27 @@ public class ConfigurationService {
     }
 
     public ConfigurationService() {
-        configuration = loadConfigurationFromFile();
+        this.configuration = new Configuration(500, 1000,
+                1000, 1000);
         logger.info(configuration.toString());
     }
 
     //setting the configuration
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
-        logger.info(configuration.toString());
+        logger.info("Configuration: "+configuration.toString());
         saveSystemConfig(configuration);
     }
 
-
     public void setConfiguration(int totalTickets, int maxTicketCapacity, int ticketReleaseRate, int customerRetrievalRate) {
         configuration = new Configuration(totalTickets, maxTicketCapacity, ticketReleaseRate, customerRetrievalRate);
+        logger.info("Configuration: "+configuration.toString());
         saveSystemConfig(configuration);
 
+    }
+
+    public void setConfiguration(){
+        configuration = loadConfigurationFromFile();
     }
 
     public Configuration getConfiguration() {
@@ -68,7 +72,7 @@ public class ConfigurationService {
         Gson gson = new Gson();
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.json")) {
             if (inputStream == null) {
-                logger.error("Configuration file not found in classpath");
+                logger.error("Configuration file not found.");
                 return null;
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

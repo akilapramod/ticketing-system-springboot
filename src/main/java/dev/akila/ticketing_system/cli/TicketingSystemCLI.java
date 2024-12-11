@@ -1,18 +1,16 @@
 package dev.akila.ticketing_system.cli;
 
 
+import java.sql.SQLOutput;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 import dev.akila.ticketing_system.TicketingSystemApplication;
 import dev.akila.ticketing_system.model.Configuration;
-import dev.akila.ticketing_system.model.TicketPool;
 import dev.akila.ticketing_system.service.ConfigurationService;
 import dev.akila.ticketing_system.service.CustomerVendorService;
 import dev.akila.ticketing_system.service.TicketPoolService;
-import dev.akila.ticketing_system.threads.Customer;
-import dev.akila.ticketing_system.threads.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,13 +40,14 @@ public class TicketingSystemCLI {
          *
          *
          */
-
+        System.out.println("Ticketing System Configuration");
         System.out.println("1. Add a new configuration");
         System.out.println("2. load existing configuration");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
 
         int option;
+
         while (true) {
             try {
 
@@ -59,6 +58,12 @@ public class TicketingSystemCLI {
                         configureSystem();
                         break;
                     case 2:
+                        try {
+                            Configuration fileConfig = configurationService.loadConfigurationFromFile();
+                            System.out.println("Configuration: " + fileConfig);
+                        } catch (NullPointerException e) {
+                            configureSystem();
+                        }
                         loadConfiguration();
                         break;
                     case 0:
@@ -86,10 +91,11 @@ public class TicketingSystemCLI {
 
         while (true) {
             try {
+                System.out.println("Configuring the system parameters\n");
                 System.out.print("Enter maximum ticket capacity: ");
                 maxTicketCapacity = scanner.nextInt();
 
-                if (maxTicketCapacity < 0) {
+                if (maxTicketCapacity <= 0) {
                     System.out.print("Given input is incorrect. Please enter a positive integer.");
                     continue;
                 }
@@ -163,6 +169,7 @@ public class TicketingSystemCLI {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
+
                 System.out.println("1. Proceed with the loaded configuration");
                 System.out.println("2. Add a new configuration");
                 System.out.println("0. Exit");
@@ -170,7 +177,8 @@ public class TicketingSystemCLI {
                 int option = scanner.nextInt();
                 switch (option) {
                     case 1:
-                        configurationService.loadConfigurationFromFile();
+                        configurationService.setConfiguration();
+                        startSystem();
                         break;
                     case 2:
                         configureSystem();
@@ -220,10 +228,6 @@ public class TicketingSystemCLI {
     public static void exit() {
         System.out.println("Exiting the system.");
         System.exit(0);
-    }
-
-    public static void main(String[] args) {
-
     }
 
 }

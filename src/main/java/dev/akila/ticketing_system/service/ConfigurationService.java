@@ -35,6 +35,7 @@ public class ConfigurationService {
         saveSystemConfig(configuration);
     }
 
+
     public void setConfiguration(int totalTickets, int maxTicketCapacity, int ticketReleaseRate, int customerRetrievalRate) {
         configuration = new Configuration(totalTickets, maxTicketCapacity, ticketReleaseRate, customerRetrievalRate);
         saveSystemConfig(configuration);

@@ -32,8 +32,7 @@ public class TicketingSystemCLI {
 
 
     public void initiateThreads() {
-            customerVendorService.startThreads();
-
+        customerVendorService.startThreads();
     }
 
     //this method is used to display the menu for the Configuration
@@ -154,7 +153,6 @@ public class TicketingSystemCLI {
         }
 
 
-
         configurationService.setConfiguration(totalTickets, maxTicketCapacity, ticketReleaseRate, ticketRetrievalRate);
         ticketPoolService.setTicketPool(totalTickets, maxTicketCapacity);
         startSystem();
@@ -190,7 +188,7 @@ public class TicketingSystemCLI {
                 scanner.nextLine();
             }
         }
-        logger.info("System configured: "+configurationService.getConfiguration().toString());
+        logger.info("System configured: " + configurationService.getConfiguration().toString());
     }
 
     public void startSystem() {

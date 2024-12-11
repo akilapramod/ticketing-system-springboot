@@ -6,7 +6,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState<'config' | 'control'>('config');
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen flex bg-gray-100 flex flex-col">
       <nav className="bg-[#001A6E] p-4">
         <div className="max-w-4xl mx-auto flex gap-4">
           <button
@@ -32,7 +32,7 @@ function App() {
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto p-4">
+      <main className="flex-1 flex items-center justify-center bg-white p-4">
         {currentPage === 'config' ? <ConfigurationPage /> : <ControlPanel />}
       </main>
     </div>

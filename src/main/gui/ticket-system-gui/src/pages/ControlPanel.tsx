@@ -36,7 +36,7 @@ const ControlPanel = () => {
     };
 
     return (
-        <div className="p-8 max-w-md mx-auto bg-[#E1FFBB] rounded-lg shadow-lg">
+        <div className="p-8 max-w-md bg-[#E1FFBB] rounded-lg shadow-lg">
             <h1 className="text-2xl font-bold text-[#001A6E] mb-6">Control Panel</h1>
             <div className="space-y-4">
                 <button

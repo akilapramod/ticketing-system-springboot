@@ -63,15 +63,28 @@ const ConfigurationPage = () => {
 
     const handleLoadConfiguration = async () => {
         try {
-            const response = await fetch('/api/configuration/load', {
+            // First load the configuration
+            const loadResponse = await fetch('/api/configuration/load', {
                 method: 'POST',
             });
 
-            if (response.ok) {
+            if (!loadResponse.ok) {
+                setMessage('Failed to load configuration');
+                return;
+            }
+
+            // Then get the loaded configuration
+            const getResponse = await fetch('/api/configuration/get', {
+                method: 'POST',
+            });
+
+            if (getResponse.ok) {
+                const loadedConfig = await getResponse.json();
+                setConfig(loadedConfig);
                 setMessage('Configuration loaded successfully!');
                 setError('');
             } else {
-                setMessage('Failed to load configuration');
+                setMessage('Failed to get loaded configuration');
             }
         } catch (error) {
             setMessage('Error loading configuration');

@@ -9,11 +9,62 @@ const App: React.FC = () => {
         customerRetrievalRate: '',
     });
 
+    const [errors, setErrors] = useState({
+        maxTicketCapacity: '',
+        totalTickets: '',
+        ticketReleaseRate: '',
+        customerRetrievalRate: '',
+    });
+
+    const validateInput = (name: string, value: string) => {
+        const numValue = parseInt(value);
+        
+        switch(name) {
+            case 'maxTicketCapacity':
+                if (value && (numValue <= 0 || !Number.isInteger(numValue))) {
+                    return 'Maximum ticket capacity must be a positive integer';
+                }
+                break;
+            case 'totalTickets':
+                if (value && (numValue < 0 || !Number.isInteger(numValue))) {
+                    return 'Total tickets must be zero or a positive integer';
+                }
+                if (value && config.maxTicketCapacity && numValue > parseInt(config.maxTicketCapacity)) {
+                    return 'Total tickets cannot exceed maximum capacity';
+                }
+                break;
+            case 'ticketReleaseRate':
+            case 'customerRetrievalRate':
+                if (value && (numValue <= 0 || !Number.isInteger(numValue))) {
+                    return 'Rate must be a positive integer';
+                }
+                break;
+        }
+        return '';
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setConfig({ ...config, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setConfig({ ...config, [name]: value });
+        setErrors({ ...errors, [name]: validateInput(name, value) });
     };
 
     const setConfiguration = async () => {
+        // Validate all fields before submitting
+        const newErrors = {
+            maxTicketCapacity: validateInput('maxTicketCapacity', config.maxTicketCapacity),
+            totalTickets: validateInput('totalTickets', config.totalTickets),
+            ticketReleaseRate: validateInput('ticketReleaseRate', config.ticketReleaseRate),
+            customerRetrievalRate: validateInput('customerRetrievalRate', config.customerRetrievalRate),
+        };
+
+        setErrors(newErrors);
+
+        // Check if there are any errors
+        if (Object.values(newErrors).some(error => error !== '')) {
+            return; // Don't submit if there are errors
+        }
+
         await fetch('/api/configuration/set', {
             method: 'POST',
             headers: {
@@ -48,6 +99,9 @@ const App: React.FC = () => {
                                     className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
                                 />
                             </label>
+                            {errors.maxTicketCapacity && (
+                                <p className="text-red-500 text-sm mt-1">{errors.maxTicketCapacity}</p>
+                            )}
                         </div>
                         <div className="flex flex-col">
                             <label className="text-sm font-medium text-blue-700 mb-1">
@@ -60,6 +114,9 @@ const App: React.FC = () => {
                                     className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
                                 />
                             </label>
+                            {errors.totalTickets && (
+                                <p className="text-red-500 text-sm mt-1">{errors.totalTickets}</p>
+                            )}
                         </div>
                         <div className="flex flex-col">
                             <label className="text-sm font-medium text-blue-700 mb-1">
@@ -72,6 +129,9 @@ const App: React.FC = () => {
                                     className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
                                 />
                             </label>
+                            {errors.ticketReleaseRate && (
+                                <p className="text-red-500 text-sm mt-1">{errors.ticketReleaseRate}</p>
+                            )}
                         </div>
                         <div className="flex flex-col">
                             <label className="text-sm font-medium text-blue-700 mb-1">
@@ -84,6 +144,9 @@ const App: React.FC = () => {
                                     className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
                                 />
                             </label>
+                            {errors.customerRetrievalRate && (
+                                <p className="text-red-500 text-sm mt-1">{errors.customerRetrievalRate}</p>
+                            )}
                         </div>
                     </div>
                     <button

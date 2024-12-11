@@ -142,7 +142,7 @@ public class TicketingSystemCLI {
                 System.out.print("Enter ticket release rate: ");
                 ticketReleaseRate = scanner.nextInt();
 
-                if (ticketReleaseRate <= 0) {
+                if (ticketReleaseRate < 0) {
                     System.out.println("Invalid input. Release rate must be a positive number.");
                     continue;
                 }
@@ -157,7 +157,7 @@ public class TicketingSystemCLI {
                 System.out.print("Enter ticket retrieval rate: ");
                 ticketRetrievalRate = scanner.nextInt();
 
-                if (ticketRetrievalRate <= 0) {
+                if (ticketRetrievalRate < 0) {
                     System.out.print("Invalid input. Retrieval rate must be a positive number.");
                     continue;
                 }

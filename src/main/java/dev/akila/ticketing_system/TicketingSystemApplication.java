@@ -17,26 +17,30 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.logging.Logger;
+
 @SpringBootApplication
 public class TicketingSystemApplication {
 
 
-    public static void main(String[] args) {
-
-        SpringApplication.run(TicketingSystemApplication.class, args);
-        System.out.println("System initiated.");
-
-
-    }
     @Autowired
     private TicketingSystemCLI ticketingSystemCLI;
 
-    //this method is used to initiate the CLI
     @Bean
     public CommandLineRunner runCLI() {
+         /*
+        This method provides a command-line runner bean to initiate the CLI configuration menu.
+        It serves as the entry point for the ticketing system, allowing users to interact with the system.
+         */
         return args -> {
             ticketingSystemCLI.displayConfigurationMenu();
         };
+    }
+    public static void main(String[] args) {
+        Logger logger = Logger.getLogger(TicketingSystemApplication.class.getName());
+
+        SpringApplication.run(TicketingSystemApplication.class, args);
+        logger.info("Ticketing System Application Started");
     }
 
 

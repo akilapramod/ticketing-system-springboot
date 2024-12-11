@@ -20,24 +20,48 @@ public class ConfigurationController {
         this.customerVendorService = customerVendorService;
     }
 
+
+
     @PostMapping("/set")
     public void setConfigurationService(@RequestBody Configuration configuration) {
+        /*
+        This method updates the ticketing system's configuration with the provided parameters. It receives a
+        Configuration object via a POST request, sets the system's configuration accordingly, and ensures that
+        all dependent services are synchronized with the new settings.
+        */
+
         configurationService.setConfiguration(configuration);
         ticketPoolService.setTicketPool(configuration);
     }
 
     @PostMapping("/get")
     public Configuration getConfiguration() {
+        /*
+        This method retrieves the current configuration of the ticketing system and returns it as a Configuration object.
+        It provides a snapshot of the system's setup, including parameters like total tickets, maximum capacity,
+        and release rates.
+        */
         return configurationService.getConfiguration();
     }
 
     @PostMapping("/start")
     public void startSystem() {
+         /*
+        This method ticketing system's operations via a POST request. It initiates the processes that handle ticket
+        distribution and purchase, enabling real-time interactions between vendors and customers. This method is essential
+        for remotely starting the system's active phase, where tickets are dynamically managed based on concurrent requests.
+        */
+
         customerVendorService.startThreads();
     }
 
     @PostMapping("stop")
     public void stopSystem() {
+        /*
+        This method halts the ticketing system's operations via a POST request. It stops the processes that handle
+        ticket distribution and purchase, ensuring a controlled shutdown of the system. This method is crucial for
+        remotely stopping the system without data loss or corruption.
+        */
         customerVendorService.stopThreads();
 
     }
@@ -45,15 +69,13 @@ public class ConfigurationController {
     @PostMapping("load")
     public void loadSystem() {
         Configuration config = configurationService.loadConfigurationFromFile();
-        /*after api get called for loading the configuration, the configuration should be displayed in the frontend
-        and the user should be able to confirm the configuration or edit and set the configuration.
+        /*
+        This method loads the system configuration from a persistent storage via a POST request and applies it to
+        the current system instance. It retrieves the previously saved configuration parameters and sets up the
+        system accordingly.
         */
-        //setConfigurationService(config);
+        setConfigurationService(config);
 
     }
 
-    @PostMapping("/test")
-    public void test() {
-        System.out.println("HTTP Test");
-    }
 }

@@ -1,4 +1,5 @@
-package dev.akila.ticketing_system.model;/*
+package dev.akila.ticketing_system.model;
+/*
  *  This class is responsible for setting the configuration of the ticket magaging system.
  */
 
@@ -11,6 +12,13 @@ public class Configuration {
 
 
     public Configuration(int totalTickets, int maxTicketCapacity, int ticketReleaseRate, int customerRetrievalRate){
+        /*
+        This constructor initializes a Configuration object with the specified parameters. It sets the total
+        number of tickets, maximum ticket capacity, ticket release rate, and customer retrieval rate,
+        defining the system's operational boundaries. This constructor is fundamental for establishing the
+        initial state of the ticketing system's configuration.
+        */
+
         this.totalTickets = totalTickets;
         this.maxTicketCapacity = maxTicketCapacity;
         this.ticketReleaseRate = ticketReleaseRate;
@@ -36,7 +44,6 @@ public class Configuration {
 
 
    // Getters for the configuration variables
-
     public int getTotalTickets() {
         return totalTickets;
     }

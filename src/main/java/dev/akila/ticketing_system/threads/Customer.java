@@ -8,22 +8,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Customer implements Runnable {
+
     private static final Logger logger = LoggerFactory.getLogger(Customer.class);
-    //    String customerID;
-    //    String customerName;
     private Configuration configuration;
     private TicketPool ticketPool;
     private volatile boolean running = true;
 
 
     public Customer(Configuration configuration, TicketPool ticketPool) {
-        //this.customerID = customerID;
-        //this.customerName = customerName;
+
+        /*
+        This constructor initializes a Customer object with the specified configuration and ticket pool.
+        It sets up the customer to interact with the ticketing system, preparing it to purchase tickets
+        in a concurrent environment.
+        */
+
         this.configuration = configuration;
         this.ticketPool = ticketPool;
     }
 
     public void run() {
+        /*
+        This method executes the customer's ticket purchasing logic. It continuously attempts to purchase tickets
+        from the ticket pool at a specified rate, simulating real-world customer behavior in a concurrent environment.
+        This method is crucial for demonstrating the consumer side of the Producer-Consumer pattern in the ticketing system.
+         */
         while (running) {
             try {
                 Ticket ticket = ticketPool.removeTickets();

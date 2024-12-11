@@ -1,7 +1,5 @@
 package dev.akila.ticketing_system.cli;
 
-
-import java.sql.SQLOutput;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -30,16 +28,21 @@ public class TicketingSystemCLI {
 
 
     public void initiateThreads() {
+         /*
+        This method calls the startThreads method in the CustomerVendorService class
+        and then it will start the Customer and vendor threads
+        */
         customerVendorService.startThreads();
     }
 
-    //this method is used to display the menu for the Configuration
     public void displayConfigurationMenu() {
-
         /*
-         *
-         *
-         */
+        This method presents a menu to the user for configuring the ticketing system. It handles user input
+        to select configuration options, such as adding a new configuration or loading an existing one.
+        Depending on the choice,
+         it calls the corresponding methods to set up the system parameters.
+        */
+
         System.out.println("Ticketing System Configuration");
         System.out.println("1. Add a new configuration");
         System.out.println("2. load existing configuration");
@@ -83,6 +86,13 @@ public class TicketingSystemCLI {
     }
 
     public void configureSystem() {
+
+        /*
+    This method guides the user through the process of configuring the ticketing system by inputting parameters
+    such as total tickets, maximum ticket capacity, release rate, and retrieval rate. It validates user inputs to
+    ensure they meet the required constraints and sets up the system with these parameters.
+    */
+
         int maxTicketCapacity;
         int totalTickets;
         int ticketReleaseRate;
@@ -166,6 +176,13 @@ public class TicketingSystemCLI {
 
     public void loadConfiguration() {
 
+         /*
+        This method loads the system configuration from a persistent storage, such as a file, and applies it to the
+        current system instance. It retrieves the previously saved configuration parameters and sets up the system
+        accordingly. This method is essential for resuming operations with saved settings, ensuring continuity and
+        persistence in system configuration.
+        */
+
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
@@ -200,6 +217,14 @@ public class TicketingSystemCLI {
     }
 
     public void startSystem() {
+
+        /*
+        This method initiates the ticketing system's operations after configuration is complete.
+        It starts the processes that handle ticket distribution and purchase, enabling real-time interactions
+        between vendors and customers. This method marks the beginning of the system's active phase,
+        where tickets are dynamically managed based on concurrent requests.
+        */
+
         while (true) {
             try {
                 System.out.println("1. Start the system");
@@ -226,6 +251,11 @@ public class TicketingSystemCLI {
     }
 
     public static void exit() {
+
+         /*
+        This method gracefully shuts down the ticketing system, terminating all active threads and releasing resources.
+        */
+
         System.out.println("Exiting the system.");
         System.exit(0);
     }

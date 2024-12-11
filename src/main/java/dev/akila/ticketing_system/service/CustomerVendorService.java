@@ -27,6 +27,14 @@ public class CustomerVendorService {
     Customer[] customers = new Customer[numberCustomers];
 
     public void startThreads() {
+
+        /*
+        This method initializes and starts the customer and vendor threads, enabling the ticketing system to
+        handle concurrent operations. It orchestrates the startup of threads that simulate customer ticket purchases
+        and vendor ticket releases, setting the stage for the Producer-Consumer pattern. This method ensures that the
+        system is ready to process tickets in real-time, managing thread lifecycles and resource allocation.
+        */
+
         Configuration configuration = configurationService.getConfiguration();
         TicketPool ticketPool = ticketPoolService.getTicketPool();
 
@@ -52,6 +60,11 @@ public class CustomerVendorService {
     }
 
     public void stopThreads(){
+        /*
+        This method gracefully shuts down the customer and vendor threads, terminating all active operations.
+        It ensures that the threads exit cleanly, preventing data corruption or resource leaks. This method is
+        called when the system needs to be stopped, providing a controlled shutdown sequence for all concurrent processes.
+        */
         if (vendors != null) {
             for (Vendor vendor : vendors) {
                 if (vendor != null) {

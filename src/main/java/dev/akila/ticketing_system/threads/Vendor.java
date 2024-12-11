@@ -16,26 +16,38 @@ public class Vendor implements Runnable {
     private volatile boolean running = true;
 
     public Vendor(Configuration configuration, TicketPool ticketPool) {
+        /*
+   `    This constructor initializes a Vendor object with the specified configuration and ticket pool. It sets
+        up the vendor to interact with the ticketing system, preparing it to release tickets in a concurrent
+        environment. This constructor is fundamental for creating vendor instances that simulate real-world ticket
+        release behavior.
+        */
+
         this.configuration = configuration;
         this.ticketPool = ticketPool;
     }
 
     @Override
     public void run() {
+        /*
+        This method executes the vendor's ticket release logic. It continuously attempts to release tickets into the
+        ticket pool at a specified rate, simulating real-world vendor behavior in a concurrent environment. This
+        method is crucial for demonstrating the producer side of the Producer-Consumer pattern in the ticketing system.
+        */
 
         while (running) {
             try {
 
                 Ticket newTicket = new Ticket("Event ", new BigDecimal(10.0));
                 ticketPool.addTickets(newTicket);
-                //TicketingSystemApplication.logMessage("A vendor has added a ticket. Total tickets: " + ticketPool.getAvailableTicketCount());
-                logger.info("Vendor added ticket: ID {}. Total tickets: {}", newTicket.getTicketId(), ticketPool.getAvailableTicketCount());
-                //System.out.println(ticketPool.getTicketsList());
+                logger.info("Vendor added ticket: ID {}. Total tickets: {}",
+                        newTicket.getTicketId(),
+                        ticketPool.getAvailableTicketCount());
                 Thread.sleep(configuration.getTicketReleaseRate());
             } catch (InterruptedException e) {
                 logger.error("Thread interrupted", e);
-                Thread.currentThread().interrupt(); // Preserve interrupt status
-                running = false; // Gracefully stop the thread
+                Thread.currentThread().interrupt();
+                running = false;
             }
         }
     }

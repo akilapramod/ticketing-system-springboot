@@ -3,6 +3,7 @@ package dev.akila.ticketing_system.service;
 import com.google.gson.Gson;
 import dev.akila.ticketing_system.model.Configuration;
 
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import java.io.*;
 @Service
 public class ConfigurationService {
     static Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
+    @Getter
     private Configuration configuration;
 
     private final String filePath = "src/main/resources/config.json";
@@ -46,15 +48,13 @@ public class ConfigurationService {
         configuration = loadConfigurationFromFile();
     }
 
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
 
     public void saveSystemConfig(Configuration config) {
+        /*
+        This method saves the current configuration of the ticketing system to a persistent storage, such as a file.
+        It writes the configuration parameters to a file, ensuring that the system's state is preserved for future
+        use. This method is essential for maintaining data persistence.
+        */
 
         Gson gson = new Gson();
         String json = gson.toJson(config);
@@ -68,6 +68,13 @@ public class ConfigurationService {
     }
 
     public Configuration loadConfigurationFromFile() {
+
+        /*
+        This method loads the configuration of the ticketing system from a persistent storage, such as a file,
+        and returns it as a Configuration object. It retrieves the saved configuration parameters, restoring the
+        system's state to a previous setup. This method is crucial for resuming operations with saved settings,
+        ensuring continuity and persistence in system configuration.
+        */
 
         Gson gson = new Gson();
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.json")) {
@@ -83,4 +90,6 @@ public class ConfigurationService {
         }
         return configuration;
     }
+
+
 }

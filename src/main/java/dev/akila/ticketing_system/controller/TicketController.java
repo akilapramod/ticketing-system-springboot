@@ -13,6 +13,11 @@ public class TicketController {
 
     @GetMapping("/available")
     public int getAvailableTickets() {
+        /*
+        This method retrieves the current number of available tickets from the ticket pool and returns it as an integer.
+        It provides real-time information on the system's ticket availability, allowing users to monitor the ticket
+        stock dynamically.
+        */
         return ticketPoolService.getAvailableTickets();
     }
 }

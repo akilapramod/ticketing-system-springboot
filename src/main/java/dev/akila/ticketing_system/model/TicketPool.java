@@ -26,12 +26,6 @@ public class TicketPool {
         }
     }
 
-    //Getters for the TicketPool
-
-
-    public List<Ticket> getTicketsList() {
-        return ticketsList;
-    }
 
 
     //get available tickets
@@ -40,6 +34,14 @@ public class TicketPool {
     }
 
     public synchronized void addTickets(Ticket ticket) {
+
+        /*
+        This method adds a ticket to the ticket pool, ensuring thread safety through synchronization.
+        It handles the addition of tickets in a concurrent environment, preventing data inconsistencies by
+        allowing only one thread to modify the pool at a time. This method is crucial for maintaining the
+        integrity of the ticket pool in a multithreaded scenario.
+        */
+
         while (ticketsList.size() >= maximumTicketCapacity) {
             try {
                 wait();
@@ -55,6 +57,14 @@ public class TicketPool {
     }
 
     public synchronized Ticket removeTickets() {
+
+        /*
+        This method removes a ticket from the ticket pool, ensuring thread safety through synchronization.
+        It handles the removal of tickets in a concurrent environment, preventing data inconsistencies by
+        allowing only one thread to modify the pool at a time. This method is essential for maintaining the
+        integrity of the ticket pool in a multithreaded scenario.
+        */
+
         while (ticketsList.isEmpty()) {
             try {
                 logger.info("Ticket Pool is empty.");

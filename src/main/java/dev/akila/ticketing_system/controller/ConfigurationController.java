@@ -4,10 +4,7 @@ import dev.akila.ticketing_system.model.Configuration;
 import dev.akila.ticketing_system.service.ConfigurationService;
 import dev.akila.ticketing_system.service.TicketPoolService;
 import dev.akila.ticketing_system.service.CustomerVendorService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/configuration")

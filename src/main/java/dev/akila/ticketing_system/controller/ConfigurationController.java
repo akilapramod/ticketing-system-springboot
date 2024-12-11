@@ -42,7 +42,7 @@ public class ConfigurationController {
     @PostMapping("stop")
     public void stopSystem() {
         customerVendorService.stopThreads();
-        System.out.println("Threads stopped.");
+
     }
 
     @PostMapping("load")

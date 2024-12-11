@@ -5,11 +5,14 @@ import dev.akila.ticketing_system.model.Configuration;
 import dev.akila.ticketing_system.model.TicketPool;
 import dev.akila.ticketing_system.threads.Customer;
 import dev.akila.ticketing_system.threads.Vendor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerVendorService {
+    static Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
 
     @Autowired
     private ConfigurationService configurationService;
@@ -17,8 +20,8 @@ public class CustomerVendorService {
     @Autowired
     private TicketPoolService ticketPoolService;
 
-    int numberOfVendors = 3;
-    int numberCustomers = 1;
+    int numberOfVendors = 1;
+    int numberCustomers = 4;
 
     Vendor[] vendors = new Vendor[numberOfVendors];
     Customer[] customers = new Customer[numberCustomers];
@@ -29,6 +32,10 @@ public class CustomerVendorService {
 
         Thread[] vendorThreads = new Thread[numberOfVendors];
         Thread[] customerThreads = new Thread[numberCustomers];
+
+        /*
+        this creates vendoran objects in the with conigiration parameters
+         */
 
         for (int i = 0; i < numberOfVendors; i++) {
             vendors[i] = new Vendor(configuration, ticketPool);
@@ -44,13 +51,14 @@ public class CustomerVendorService {
 
     }
 
-    public void stopThreads() {
+    public void stopThreads(){
         if (vendors != null) {
             for (Vendor vendor : vendors) {
                 if (vendor != null) {
                     vendor.stop();
                 }
             }
+
         }
 
         if (customers != null) {
@@ -58,7 +66,10 @@ public class CustomerVendorService {
                 if (customer != null) {
                     customer.stop();
                 }
+
             }
+
         }
+        logger.info("Ticketing system stopped.");
     }
 }

@@ -31,6 +31,7 @@ public class ConfigurationService {
     //setting the configuration
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+        logger.info(configuration.toString());
         saveSystemConfig(configuration);
     }
 

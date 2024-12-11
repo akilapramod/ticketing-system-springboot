@@ -1,185 +1,216 @@
 import React, { useState } from 'react';
-import './App.css';
 
+// Configuration Section Component
+const ConfigurationSection = ({ config, setConfig, onSetConfiguration }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfig({ ...config, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-6">
+        {[
+          {
+            name: 'maxTicketCapacity',
+            label: 'Max Ticket Capacity'
+          },
+          {
+            name: 'totalTickets',
+            label: 'Total Tickets'
+          },
+          {
+            name: 'ticketReleaseRate',
+            label: 'Ticket Release Rate'
+          },
+          {
+            name: 'customerRetrievalRate',
+            label: 'Ticket Retrieval Rate'
+          }
+        ].map(({ name, label }) => (
+          <div key={name} className="flex flex-col">
+            <label className="text-sm font-medium text-blue-700 mb-1">
+              {label}:
+              <input
+                type="number"
+                name={name}
+                value={config[name]}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
+              />
+            </label>
+          </div>
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={onSetConfiguration}
+        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200"
+      >
+        Set Configuration
+      </button>
+    </div>
+  );
+};
+
+// Control Panel Section Component
+const ControlPanelSection = ({ onStartSystem, onStopSystem }) => {
+  return (
+    <div className="flex space-x-4">
+      <button
+        onClick={onStartSystem}
+        className="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-200"
+      >
+        Start System
+      </button>
+      <button
+        onClick={onStopSystem}
+        className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors duration-200"
+      >
+        Stop System
+      </button>
+    </div>
+  );
+};
+
+// Ticket Status Section Component
+const TicketStatusSection = ({ availableTickets }:{availableTickets:number}) => {
+  return (
+    <div className="bg-gray-100 p-6 rounded-lg">
+      <h3 className="text-xl font-semibold text-blue-800 mb-4">
+        Ticket Pool Status
+      </h3>
+      <div className="flex justify-between items-center">
+        <span className="text-lg text-blue-700">Available Tickets:</span>
+        <span className="text-2xl font-bold text-green-600">
+          {availableTickets}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+// Main App Component
 const App: React.FC = () => {
-    const [config, setConfig] = useState({
-        maxTicketCapacity: '',
-        totalTickets: '',
-        ticketReleaseRate: '',
-        customerRetrievalRate: '',
-    });
+  const [activeSection, setActiveSection] = useState<'configuration' | 'controlPanel' | 'ticketStatus'>('configuration');
+  const [config, setConfig] = useState({
+    maxTicketCapacity: '',
+    totalTickets: '',
+    ticketReleaseRate: '',
+    customerRetrievalRate: '',
+  });
+  const [availableTickets, setAvailableTickets] = useState(0);
 
-    const [errors, setErrors] = useState({
-        maxTicketCapacity: '',
-        totalTickets: '',
-        ticketReleaseRate: '',
-        customerRetrievalRate: '',
-    });
+  const setConfiguration = async () => {
+    try {
+      const response = await fetch('/api/configuration/set', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(config),
+      });
 
-    const validateInput = (name: string, value: string) => {
-        const numValue = parseInt(value);
-        
-        switch(name) {
-            case 'maxTicketCapacity':
-                if (value && (numValue <= 0 || !Number.isInteger(numValue))) {
-                    return 'Maximum ticket capacity must be a positive integer';
-                }
-                break;
-            case 'totalTickets':
-                if (value && (numValue < 0 || !Number.isInteger(numValue))) {
-                    return 'Total tickets must be zero or a positive integer';
-                }
-                if (value && config.maxTicketCapacity && numValue > parseInt(config.maxTicketCapacity)) {
-                    return 'Total tickets cannot exceed maximum capacity';
-                }
-                break;
-            case 'ticketReleaseRate':
-            case 'customerRetrievalRate':
-                if (value && (numValue <= 0 || !Number.isInteger(numValue))) {
-                    return 'Rate must be a positive integer';
-                }
-                break;
-        }
-        return '';
-    };
+      if (response.ok) {
+        // Assuming the response returns the initial available tickets
+        const result = await response.json();
+        setAvailableTickets(result.availableTickets);
+      }
+    } catch (error) {
+      console.error('Error setting configuration:', error);
+    }
+  };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setConfig({ ...config, [name]: value });
-        setErrors({ ...errors, [name]: validateInput(name, value) });
-    };
+  const startSystem = async () => {
+    try {
+      const response = await fetch('/api/configuration/start', { method: 'POST' });
+      if (response.ok) {
+        const result = await response.json();
+        setAvailableTickets(result.availableTickets);
+      }
+    } catch (error) {
+      console.error('Error starting system:', error);
+    }
+  };
 
-    const setConfiguration = async () => {
-        // Validate all fields before submitting
-        const newErrors = {
-            maxTicketCapacity: validateInput('maxTicketCapacity', config.maxTicketCapacity),
-            totalTickets: validateInput('totalTickets', config.totalTickets),
-            ticketReleaseRate: validateInput('ticketReleaseRate', config.ticketReleaseRate),
-            customerRetrievalRate: validateInput('customerRetrievalRate', config.customerRetrievalRate),
-        };
+  const stopSystem = async () => {
+    try {
+      await fetch('/api/configuration/stop', { method: 'POST' });
+      setAvailableTickets(0);
+    } catch (error) {
+      console.error('Error stopping system:', error);
+    }
+  };
 
-        setErrors(newErrors);
 
-        // Check if there are any errors
-        if (Object.values(newErrors).some(error => error !== '')) {
-            return; // Don't submit if there are errors
-        }
 
-        await fetch('/api/configuration/set', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+
+
+  return (
+    <div className="min-h-screen bg-blue-100 py-8 px-4">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        <h1 className="text-3xl font-bold text-center mb-8 text-blue-800">
+          Ticket Management System
+        </h1>
+
+        {/* Section Navigation */}
+        <div className="flex mb-6 space-x-4 justify-center">
+          {[
+            {
+              id: 'configuration',
+              label: 'Configuration',
+              icon: '⚙️'
             },
-            body: JSON.stringify(config),
-        });
-    };
-
-    const startSystem = async () => {
-        await fetch('/api/configuration/start', { method: 'POST' });
-    };
-
-    const stopSystem = async () => {
-        await fetch('/api/configuration/stop', { method: 'POST' });
-    };
-
-    return (
-        <div className="min-h-screen bg-blue-100 py-8 px-4">
-            <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8 mb-6">
-                <h1 className="text-3xl font-bold text-center mb-8 text-blue-800">Ticket Management System</h1>
-                <form className="space-y-6 mb-8">
-                    <div className="grid gap-6">
-                        <div className="flex flex-col">
-                            <label className="text-sm font-medium text-blue-700 mb-1">
-                                Max Ticket Capacity:
-                                <input
-                                    type="number"
-                                    name="maxTicketCapacity"
-                                    value={config.maxTicketCapacity}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
-                                />
-                            </label>
-                            {errors.maxTicketCapacity && (
-                                <p className="text-red-500 text-sm mt-1">{errors.maxTicketCapacity}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col">
-                            <label className="text-sm font-medium text-blue-700 mb-1">
-                                Total Tickets:
-                                <input
-                                    type="number"
-                                    name="totalTickets"
-                                    value={config.totalTickets}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
-                                />
-                            </label>
-                            {errors.totalTickets && (
-                                <p className="text-red-500 text-sm mt-1">{errors.totalTickets}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col">
-                            <label className="text-sm font-medium text-blue-700 mb-1">
-                                Ticket Release Rate:
-                                <input
-                                    type="number"
-                                    name="ticketReleaseRate"
-                                    value={config.ticketReleaseRate}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
-                                />
-                            </label>
-                            {errors.ticketReleaseRate && (
-                                <p className="text-red-500 text-sm mt-1">{errors.ticketReleaseRate}</p>
-                            )}
-                        </div>
-                        <div className="flex flex-col">
-                            <label className="text-sm font-medium text-blue-700 mb-1">
-                                Ticket Retrieval Rate:
-                                <input
-                                    type="number"
-                                    name="customerRetrievalRate"
-                                    value={config.customerRetrievalRate}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-blue-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-white text-blue-900"
-                                />
-                            </label>
-                            {errors.customerRetrievalRate && (
-                                <p className="text-red-500 text-sm mt-1">{errors.customerRetrievalRate}</p>
-                            )}
-                        </div>
-                    </div>
-                    <button
-                        type="button"
-                        onClick={setConfiguration}
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200"
-                    >
-                        Set Configuration
-                    </button>
-                </form>
-                <div className="flex space-x-4">
-                    <button
-                        onClick={startSystem}
-                        className="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-200"
-                    >
-                        Start System
-                    </button>
-                    <button
-                        onClick={stopSystem}
-                        className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors duration-200"
-                    >
-                        Stop System
-                    </button>
-                </div>
-            </div>
-            <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
-                <h4 className="text-xl font-semibold text-blue-800 mb-4">System Logs</h4>
-                <form className="bg-gray-50 p-4 rounded-md">
-
-                </form>
-            </div>
+            {
+              id: 'controlPanel',
+              label: 'Control Panel',
+              icon: '🎛️'
+            },
+            {
+              id: 'ticketStatus',
+              label: 'Ticket Status',
+              icon: '🎫'
+            }
+          ].map(({ id, label, icon }) => (
+            <button
+              key={id}
+              onClick={() => setActiveSection(id as any)}
+              className={`
+                px-4 py-2 rounded-md transition-colors duration-200
+                ${activeSection === id 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                }
+              `}
+            >
+              {icon} {label}
+            </button>
+          ))}
         </div>
-    );
+
+        {/* Conditional Rendering of Sections */}
+        {activeSection === 'configuration' && (
+          <ConfigurationSection
+            config={config}
+            setConfig={setConfig}
+            onSetConfiguration={setConfiguration}
+          />
+        )}
+
+        {activeSection === 'controlPanel' && (
+          <ControlPanelSection
+            onStartSystem={startSystem}
+            onStopSystem={stopSystem}
+          />
+        )}
+
+        {activeSection === 'ticketStatus' && (
+          <TicketStatusSection
+            availableTickets={availableTickets}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default App;

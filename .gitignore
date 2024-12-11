@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/logs/application.log
+/src/main/resources/logs/application.log.2024-12-10.0.gz
+/logs/application.log

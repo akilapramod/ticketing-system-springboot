@@ -14,7 +14,6 @@ public class TicketPoolService {
 
     public void setTicketPool(int totalTickets, int maxTicketCapacity) {
         ticketPool = new TicketPool(totalTickets, maxTicketCapacity);
-
     }
 
     public TicketPool getTicketPool() {

@@ -27,7 +27,8 @@ public class Customer implements Runnable {
         while (running) {
             try {
                 Ticket ticket = ticketPool.removeTickets();
-                logger.info("Customer retrieved ticket: ID {}. Total tickets: {}", ticket.getTicketId(), ticketPool.getAvailableTicketCount());
+                logger.info("Customer retrieved ticket: ID {}. Total tickets: {}", ticket.getTicketId(),
+                        ticketPool.getAvailableTicketCount());
                 Thread.sleep(configuration.getCustomerRetrievalRate());
             } catch (InterruptedException e) {
                 logger.error("Thread interrupted", e);

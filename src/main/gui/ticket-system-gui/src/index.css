@@ -24,10 +24,12 @@ a:hover {
 
 body {
   margin: 0;
+  padding: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #EBF5FF;
 }
 
 h1 {
@@ -54,6 +56,11 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+input[type="number"] {
+  background-color: white !important;
+  color: #1e3a8a !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -66,3 +73,7 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

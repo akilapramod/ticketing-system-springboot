@@ -53,7 +53,6 @@ public class Configuration {
         return customerRetrievalRate;
     }
 
-    //this needs to be modified
 
     @Override
     public String toString() {

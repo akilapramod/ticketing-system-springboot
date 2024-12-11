@@ -3,6 +3,7 @@ package dev.akila.ticketing_system.cli;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import dev.akila.ticketing_system.TicketingSystemApplication;
 import dev.akila.ticketing_system.model.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TicketingSystemCLI {
     private static final Scanner scanner = new Scanner(System.in);
+    Logger logger = Logger.getLogger(TicketingSystemApplication.class.getName());
 
     @Autowired
     private ConfigurationService configurationService;
@@ -163,7 +165,6 @@ public class TicketingSystemCLI {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
-                System.out.println(configurationService.getConfiguration());
                 System.out.println("1. Proceed with the loaded configuration");
                 System.out.println("2. Add a new configuration");
                 System.out.println("0. Exit");
@@ -189,7 +190,7 @@ public class TicketingSystemCLI {
                 scanner.nextLine();
             }
         }
-        System.out.println("configuration CLI: "+configurationService.getConfiguration());
+        logger.info("System configured: "+configurationService.getConfiguration().toString());
     }
 
     public void startSystem() {

@@ -27,8 +27,6 @@ public class ConfigurationController {
     public void setConfigurationService(@RequestBody Configuration configuration) {
         configurationService.setConfiguration(configuration);
         ticketPoolService.setTicketPool(configuration);
-        System.out.println(configuration);
-        System.out.println(ticketPoolService.getTicketPool());
     }
 
     @PostMapping("/get")
@@ -53,7 +51,7 @@ public class ConfigurationController {
         /*after api get called for loading the configuration, the configuration should be displayed in the frontend
         and the user should be able to confirm the configuration or edit and set the configuration.
         */
-        setConfigurationService(config);
+        //setConfigurationService(config);
 
     }
 
